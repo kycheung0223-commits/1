@@ -41,7 +41,7 @@
             top: 15px;
             left: 25px;
             width: 1100px;
-            height: 95px; /* 微微拉高高度，容納上下兩層排版 */
+            height: 95px; /* 容納上下兩層排版 */
             background-image: url('images/bg_hud_top.png');
             background-size: 100% 100%;
             background-repeat: no-repeat;
@@ -53,7 +53,7 @@
             z-index: 50;
         }
 
-        /* 國運指標單個容器（改為上下垂直排列） */
+        /* 國運指標單個容器（上下垂直排列） */
         .stat-item {
             display: flex;
             flex-direction: column;
@@ -93,7 +93,7 @@
         .stat-item.culture .stat-text-group::before     { background-image: url('images/icon_hud_culture.png'); }
         .stat-item.round .stat-text-group::before       { background-image: url('images/icon_hud_round.png'); }
 
-        /* 🌟 核心：進度條外殼凹槽（載入 Canva 640x64 大圖強迫壓縮技術） */
+        /* 核心：進度條外殼凹槽（載入 Canva 640x64 大圖強迫壓縮技術） */
         .stat-bar-container {
             width: 150px;   /* 網頁上呈現的精細寬度 */
             height: 16px;   /* 網頁上呈現的精細高度，徹底破解 Canva 40px 的下載限制 */
@@ -181,10 +181,11 @@
             z-index: 40;
         }
 
+        /* 👑 修正：大臣卡牌外殼容器（啟用絕對定位父級屏障） */
         .advisor-slot {
             width: 200px;
             height: 260px;
-            position: relative;
+            position: relative; /* 牢牢抓緊內部绝对定位的文字 */
             cursor: pointer;
         }
 
@@ -211,16 +212,18 @@
                 url('images/card_jade_slot.png');
         }
 
-        /* 卡牌內文（名字暫不使用底框底條，維持純文字動態渲染） */
+        /* 👑 修正：卡牌內文文字組（擺脫外部干擾，精準壓回卡牌底部） */
         .advisor-info {
             position: absolute;
-            bottom: 25px;
-            width: 100%;
+            bottom: 18px;       /* 💡 陛下可微調此像素值，數值越小，字體越貼緊卡牌底邊 */
+            left: 0;
+            width: 100%;        /* 搭配 left:0 與 text-align:center 達成百分之百置中 */
             text-align: center;
             color: #ffffff;
             text-shadow: 1px 2px 4px #000;
             font-size: 15px;
             line-height: 1.4;
+            z-index: 10;
         }
 
         /* ==========================================================================
@@ -416,7 +419,7 @@
         <div class="proposal-scroll-popup">
             <div id="proposal-text" style="line-height: 1.6; font-weight: 600;">
                 <span style="font-size: 18px; font-weight: bold;">【奏摺】</span><br>
-                <span id="proposal-content">臣張居正啟奏：推行「一條鞭法」，整頓田賦，可使大華國庫稅收翻倍，充實邊防軍費。</span>
+                <span id="proposal-content">臣張居正啟奏：推行「一條鞭法」，整頓田賦，計畝徵銀。此法可使大華國庫稅收翻倍，充實邊防軍費。</span>
             </div>
             <button class="action-confirm-btn" onclick="approveProposal()"></button>
             <div class="seal-stamp" id="approval-seal"></div>
@@ -428,34 +431,25 @@
     </div>
 
     <script>
-        // 大臣奏摺資料庫，方便動態切換
         const proposals = {
             '飛': '臣岳飛啟奏：郾城大捷，金兵士氣已潰！懇請陛下賜予軍餉十萬兩，臣定當直搗黃龍，迎回聖駕，光復大華河山！',
             '居正': '臣張居正啟奏：推行「一條鞭法」，整頓田賦，計畝徵銀。此法可使大華國庫稅收翻倍，充實邊防軍費。',
             '徵': '臣魏徵啟奏：居安思危，戒奢以儉。近來宮廷營造奢華，民心偶有不穩，懇請陛下罷止不急之務，廣開言路。'
         };
 
-        // 大臣翻牌（點擊卡牌切換發光邊框，並動態改寫奏摺文字）
         function selectAdvisor(element, name) {
             document.querySelectorAll('.advisor-slot').forEach(slot => {
                 slot.classList.remove('selected');
             });
             element.classList.add('selected');
             
-            // 更新奏摺文字
             document.getElementById('proposal-content').innerText = proposals[name];
-            // 隱藏御批印章
             document.getElementById('approval-seal').style.display = 'none';
         }
 
-        // 點擊御批按鈕後，硃砂印章蓋上的視覺互動（陛下，此處可自由追加扣除或增加數值的程式碼邏輯）
         function approveProposal() {
             const seal = document.getElementById('approval-seal');
             seal.style.display = 'block';
-            
-            // 範例：點擊批准後，動態改變某一項國運數值與進度條長度
-            // document.getElementById('val-politics').innerText = "75";
-            // document.getElementById('bar-politics').style.width = "75%";
         }
     </script>
 </body>
